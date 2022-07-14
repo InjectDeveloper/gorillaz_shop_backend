@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UsersRepository } from "./user.repository";
 import { UserRolesEnum } from "./constants/user-roles.enum";
@@ -15,8 +15,11 @@ export class UserService {
   async get(
     id: string,
     throwsException = false,
-  ): Promise<UserEntity | null> {
+  ): Promise<UserEntity> {
     let serializedUser = await this.usersRepository.get(id, throwsException);
+    if (!serializedUser) {
+      throw new HttpException("Пошел нахуй", 400)
+    }
     serializedUser.cart = "d" //вызов из сервиса корзины
     return serializedUser
   }
