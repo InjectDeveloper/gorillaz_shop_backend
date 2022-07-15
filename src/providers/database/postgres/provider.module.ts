@@ -26,14 +26,10 @@ import { join } from "path";
           connectionTimeoutMillis: postgresConfigService.connectionTimeoutMs,
         },
         autoLoadEntities: true,
-        entities: [join(__dirname, "..", "..", "/**/*.entity.js")],
+        entities: [__dirname + '/../../../**/*.entity.js'],
         migrations: [join(__dirname, "..", "..", "/database/migrations/**/*.entity.{js,ts}")]
       }),
     } as TypeOrmModuleAsyncOptions),
   ],
 })
-export class PostgresDatabaseProviderModule {
-  constructor() {
-    console.log(join(__dirname, "..", "..", "..", "/**/*.entity.js"))
-  }
-}
+export class PostgresDatabaseProviderModule {}

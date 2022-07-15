@@ -1,57 +1,56 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { IUser } from "../interfaces/user.interface";
 import { UserRolesEnum } from "../constants/user-roles.enum";
+import { Deposit } from "../../deposit/entities/deposit.entity";
+import { Review } from "../../review/entities/review.entity";
+import { Item } from "../../item/entities/item.entity";
+import { Cart } from "../../cart/entities/cart.entity";
 
 @Entity({ name: 'users' })
 export class User implements IUser {
   @PrimaryGeneratedColumn('uuid')
-  public id: string;
+  id: string;
 
   @Column({ unique: true })
-  public email: string;
+  email: string;
 
   @Column()
-  public password: string;
+  password: string;
 
   @Column({ default: false })
-  public isRegisteredWithGoogle: boolean;
+  isRegisteredWithGoogle: boolean;
 
   @Column({ nullable: true })
-  public refreshToken: string;
+  refreshToken: string;
 
-  //TODO delete default
-  @Column({default: ""})
-  public avatar: string;
+  @Column()
+  avatar: string;
 
   @Column({
     type: "real",
     default: 0,
   })
-  public balance: number;
+  balance: number;
 
-  //TODO delete default
-  @Column({default: ""})
-  public deposits: string;
+  @OneToMany(() => Deposit, (deposit) => deposit.user)
+  deposits: Deposit[];
 
-  //TODO delete default
-  @Column({default: ""})
-  public favouriteItems: string
+  @ManyToMany(() => Item, (item) => item.usersFavourite)
+  favouriteItems: Item[]
 
-  //TODO delete default
-  @Column({default: ""})
-  public history: string
+  @OneToMany(() => Cart, (cart) => cart.user)
+  history: Cart[]
 
-  //TODO delete default
-  @Column({default: ""})
-  public reviews: string;
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review[];
 
   @Column({
     type: "enum",
     enum: UserRolesEnum,
     default: UserRolesEnum.USER,
   })
-  public role: UserRolesEnum;
+  role: UserRolesEnum;
 
-  @CreateDateColumn()
-  public created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 }

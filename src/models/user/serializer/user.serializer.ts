@@ -2,16 +2,28 @@ import { Expose } from 'class-transformer';
 import { IUser } from '../interfaces/user.interface';
 import { ModelEntity } from "../../../core/serializers/model.serializer";
 import { UserRolesEnum } from "../constants/user-roles.enum";
+import { Deposit } from "../../deposit/entities/deposit.entity";
+import { Review } from "../../review/entities/review.entity";
+import { Item } from "../../item/entities/item.entity";
+import { Cart } from "../../cart/entities/cart.entity";
 
 
-export const defaultUserGroupsForSerializing: string[] = ['user.timestamps'];
-export const allUserGroupsForSerializing: string[] = [
+export const defaultUserGroupsForSerializing: string[] = [];
+export const extendedUserGroupsForSerializing: string[] = [
   ...defaultUserGroupsForSerializing,
+  'user.timestamps'
+]
+export const allUserGroupsForSerializing: string[] = [
+  ...extendedUserGroupsForSerializing,
   'user.password',
   'user.refreshToken'
 ];
 
 export class UserEntity extends ModelEntity implements IUser {
+  constructor() {
+    super()
+  }
+
   email: string
 
   @Expose({ groups: ['user.password'] })
@@ -26,15 +38,15 @@ export class UserEntity extends ModelEntity implements IUser {
 
   balance: number
 
-  cart: string
+  cart: Cart
 
-  deposits: string
+  deposits: Deposit[]
 
-  favouriteItems: string
+  favouriteItems: Item[]
 
-  history: string
+  history: Cart[]
 
-  reviews: string
+  reviews: Review[]
 
   role: UserRolesEnum
 

@@ -20,7 +20,7 @@ export class UserService {
     if (!serializedUser) {
       throw new HttpException("Пошел нахуй", 400)
     }
-    serializedUser.cart = "d" //вызов из сервиса корзины
+    /*serializedUser.cart = "d" //вызов из сервиса корзины*/
     return serializedUser
   }
 
