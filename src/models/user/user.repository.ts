@@ -18,4 +18,16 @@ export class UsersRepository extends ModelRepository<User, UserEntity> {
   override transformMany(models: User[], transformOptions: ClassTransformOptions = { groups: allUserGroupsForSerializing }): UserEntity[] {
     return models.map(model => this.transform(model, transformOptions));
   }
+
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    const user = await this.findOne({
+      where: {
+        email: email
+      }
+    })
+    if (!user) {
+      return null
+    }
+    return this.transform(user)
+  }
 }
