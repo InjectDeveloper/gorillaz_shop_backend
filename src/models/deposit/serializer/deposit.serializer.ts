@@ -11,7 +11,8 @@ export const extendedDepositGroupsForSerializing: string[] = [
   'deposit.timestamps'
 ]
 export const allDepositGroupsForSerializing: string[] = [
-  ...extendedDepositGroupsForSerializing
+  ...extendedDepositGroupsForSerializing,
+  'deposit.data'
 ];
 
 export class DepositEntity extends ModelEntity implements IDeposit{
@@ -23,6 +24,7 @@ export class DepositEntity extends ModelEntity implements IDeposit{
 
   sum: number;
 
+  @Expose({ groups: ['deposit.data'] })
   data: string;
 
   status: DepositStatusesEnum;

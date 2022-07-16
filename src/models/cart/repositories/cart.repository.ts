@@ -1,4 +1,4 @@
-import { classToPlain, plainToClass, plainToInstance } from "class-transformer";
+import { classToPlain, ClassTransformOptions, plainToClass, plainToInstance } from "class-transformer";
 import { EntityRepository } from 'typeorm'
 import { NotFoundException } from "@nestjs/common";
 import { Cart } from "../entities/cart.entity";
@@ -8,18 +8,15 @@ import { allCartGroupsForSerializing, CartEntity } from "../serializer/cart.seri
 
 @EntityRepository(Cart)
 export class CartsRepository extends ModelRepository<Cart, CartEntity> {
-  override transform(model: Cart): CartEntity {
-    const tranformOptions = {
-      groups: allCartGroupsForSerializing
-    };
+  override transform(model: Cart, transformOptions: ClassTransformOptions = { groups: allCartGroupsForSerializing }): CartEntity {
     return plainToClass(
       CartEntity,
-      classToPlain(model, tranformOptions),
-      tranformOptions
+      classToPlain(model, transformOptions),
+      transformOptions
     );
   }
 
-  override transformMany(models: Cart[]): CartEntity[] {
-    return models.map(model => this.transform(model));
+  override transformMany(models: Cart[], transformOptions: ClassTransformOptions = { groups: allCartGroupsForSerializing }): CartEntity[] {
+    return models.map(model => this.transform(model, transformOptions));
   }
 }

@@ -9,7 +9,8 @@ import { IProduct } from "../interfaces/product.interface";
 export const defaultProductGroupsForSerializing: string[] = [];
 export const extendedProductGroupsForSerializing: string[] = [
   ...defaultProductGroupsForSerializing,
-  'product.timestamps'
+  'product.timestamps',
+  'product.data'
 ]
 export const allProductGroupsForSerializing: string[] = [
   ...extendedProductGroupsForSerializing,
@@ -22,6 +23,7 @@ export class ProductEntity extends ModelEntity implements IProduct {
 
   item: Item;
 
+  @Expose({ groups: ['product.data'] })
   data: string;
 
   isSale: boolean;

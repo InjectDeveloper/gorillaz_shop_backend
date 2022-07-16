@@ -1,4 +1,4 @@
-import { classToPlain, plainToClass, plainToInstance } from "class-transformer";
+import { classToPlain, ClassTransformOptions, plainToClass, plainToInstance } from "class-transformer";
 import { EntityRepository } from 'typeorm'
 import { ModelRepository } from '../model.repository'
 import { NotFoundException } from "@nestjs/common";
@@ -7,18 +7,15 @@ import { allReviewGroupsForSerializing, ReviewEntity } from "./serializer/review
 
 @EntityRepository(Review)
 export class ReviewsRepository extends ModelRepository<Review, ReviewEntity> {
-  override transform(model: Review): ReviewEntity {
-    const tranformOptions = {
-      groups: allReviewGroupsForSerializing
-    };
+  override transform(model: Review, transformOptions: ClassTransformOptions = { groups:  allReviewGroupsForSerializing }): ReviewEntity {
     return plainToClass(
       ReviewEntity,
-      classToPlain(model, tranformOptions),
-      tranformOptions
+      classToPlain(model, transformOptions),
+      transformOptions
     );
   }
 
-  override transformMany(models: Review[]): ReviewEntity[] {
-    return models.map(model => this.transform(model));
+  override transformMany(models: Review[], transformOptions: ClassTransformOptions = { groups: allReviewGroupsForSerializing }): ReviewEntity[] {
+    return models.map(model => this.transform(model, transformOptions));
   }
 }

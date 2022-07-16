@@ -15,13 +15,8 @@ export class UserService {
   async get(
     id: string,
     throwsException = false,
-  ): Promise<UserEntity> {
-    let serializedUser = await this.usersRepository.get(id, throwsException);
-    if (!serializedUser) {
-      throw new HttpException("Пошел нахуй", 400)
-    }
-    /*serializedUser.cart = "d" //вызов из сервиса корзины*/
-    return serializedUser
+  ): Promise<void> {
+
   }
 
   async create(

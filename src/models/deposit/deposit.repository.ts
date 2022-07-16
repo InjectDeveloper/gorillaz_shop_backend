@@ -1,4 +1,4 @@
-import { classToPlain, plainToClass, plainToInstance } from "class-transformer";
+import { classToPlain, ClassTransformOptions, plainToClass, plainToInstance } from "class-transformer";
 import { EntityRepository } from 'typeorm'
 import { ModelRepository } from '../model.repository'
 import { NotFoundException } from "@nestjs/common";
@@ -7,19 +7,16 @@ import { allDepositGroupsForSerializing, DepositEntity } from "./serializer/depo
 
 @EntityRepository(Deposit)
 export class DepositsRepository extends ModelRepository<Deposit, DepositEntity> {
-  override transform(model: Deposit): DepositEntity {
-    const tranformOptions = {
-      groups: allDepositGroupsForSerializing
-    };
+  override transform(model: Deposit, transformOptions: ClassTransformOptions = { groups:  allDepositGroupsForSerializing}): DepositEntity {
     return plainToClass(
       DepositEntity,
-      classToPlain(model, tranformOptions),
-      tranformOptions
+      classToPlain(model, transformOptions),
+      transformOptions
     );
   }
 
-  override transformMany(models: Deposit[]): DepositEntity[] {
-    return models.map(model => this.transform(model));
+  override transformMany(models: Deposit[], transformOptions: ClassTransformOptions = { groups:  allDepositGroupsForSerializing}): DepositEntity[] {
+    return models.map(model => this.transform(model, transformOptions));
   }
 
 }

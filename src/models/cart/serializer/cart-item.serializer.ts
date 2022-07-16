@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from "class-transformer";
 import { Deposit } from "../../deposit/entities/deposit.entity";
 import { ModelEntity } from "../../../core/serializers/model.serializer";
 
@@ -9,6 +9,7 @@ import { CartItem } from "../entities/cart-item.entity";
 import { ICartItem } from "../interfaces/cart-item.interface";
 import { Cart } from "../entities/cart.entity";
 import { Product } from "../../product/entities/product.entity";
+import { ProductEntity } from "../../product/serializer/product.serializer";
 
 export const defaultCartItemGroupsForSerializing: string[] = [];
 export const extendedCartItemGroupsForSerializing: string[] = [
@@ -26,6 +27,7 @@ export class CartItemEntity extends ModelEntity implements ICartItem {
 
   cart: Cart
 
+  @Type(() => ProductEntity)
   product: Product
 
   @Expose({ groups: ['cartItem.timestamps'] })

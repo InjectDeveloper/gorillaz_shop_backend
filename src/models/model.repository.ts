@@ -1,11 +1,12 @@
 import { NotFoundException } from '@nestjs/common'
-import { plainToInstance } from 'class-transformer'
+import { ClassTransformOptions, plainToInstance } from "class-transformer";
 import { DeepPartial, Repository } from 'typeorm'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 import { ModelEntity } from "../core/serializers/model.serializer";
+import { allProductGroupsForSerializing } from "./product/serializer/product.serializer";
 
 export class ModelRepository<T extends ModelEntity, K extends ModelEntity> extends Repository<T> {
-  async get(id: string, throwsException = false): Promise<K | null> {
+  async get(id: string, transformOptions: ClassTransformOptions = {}, throwsException = false): Promise<K | null> {
     const entity = await this.findOne({
       where: { id },
     })
@@ -13,7 +14,7 @@ export class ModelRepository<T extends ModelEntity, K extends ModelEntity> exten
       throw new NotFoundException('Model not found.')
     }
 
-    return entity ? this.transform(entity) : null
+    return entity ? this.transform(entity, transformOptions) : null
   }
 
   async createEntity(inputs: DeepPartial<T>): Promise<K> {

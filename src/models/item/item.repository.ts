@@ -1,4 +1,4 @@
-import { classToPlain, plainToClass, plainToInstance } from "class-transformer";
+import { classToPlain, ClassTransformOptions, plainToClass, plainToInstance } from "class-transformer";
 import { EntityRepository } from 'typeorm'
 import { ModelRepository } from '../model.repository'
 import { NotFoundException } from "@nestjs/common";
@@ -7,18 +7,15 @@ import { allItemGroupsForSerializing, ItemEntity } from "./serializer/item.seria
 
 @EntityRepository(Item)
 export class ItemsRepository extends ModelRepository<Item, ItemEntity> {
-  override transform(model: Item): ItemEntity {
-    const tranformOptions = {
-      groups: allItemGroupsForSerializing
-    };
+  override transform(model: Item, transformOptions: ClassTransformOptions = { groups:  allItemGroupsForSerializing }): ItemEntity {
     return plainToClass(
       ItemEntity,
-      classToPlain(model, tranformOptions),
-      tranformOptions
+      classToPlain(model, transformOptions),
+      transformOptions
     );
   }
 
-  override transformMany(models: Item[]): ItemEntity[] {
-    return models.map(model => this.transform(model));
+  override transformMany(models: Item[], transformOptions: ClassTransformOptions = { groups:  allItemGroupsForSerializing }): ItemEntity[] {
+    return models.map(model => this.transform(model, transformOptions));
   }
 }
