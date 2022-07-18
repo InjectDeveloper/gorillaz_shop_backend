@@ -45,6 +45,17 @@ export class UserService {
     return await this.usersRepository.createEntity({ ...createUserDto, avatar });
   }
 
+  async createWithGoogle(
+    createUserDto: CreateUserDto,
+  ): Promise<UserEntity> {
+    const candidate = await this.usersRepository.findByEmail(createUserDto.email)
+    if (candidate) {
+      throw new UserAlreadyRegisteredException()
+    }
+    const avatar = UserAvatarsArray[Math.floor(Math.random() * UserAvatarsArray.length - 1)]! //почему avatar: string | undefined биля?
+    return await this.usersRepository.createEntity({ ...createUserDto, avatar, isRegisteredWithGoogle: true });
+  }
+
   async update(
     id: string,
     inputs: DeepPartial<UserEntity>

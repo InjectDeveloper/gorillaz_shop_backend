@@ -30,4 +30,8 @@ export class UsersRepository extends ModelRepository<User, UserEntity> {
     }
     return this.transform(user)
   }
+
+  async updateRefreshToken(user: UserEntity, token: string): Promise<UserEntity> {
+    return await this.updateEntity(user, { refreshToken: token })
+  }
 }
